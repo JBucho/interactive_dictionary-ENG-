@@ -13,11 +13,17 @@ def translate(word):
 
     word = word.lower()
     if word in DATA.keys():
-        print('\n{:*^60}'.format(' %s - definition: ') % word)
+        decorate_definition(word)
         return DATA[word]
+
     elif word.title() in DATA:
-        print('\n{:*^60}'.format(' %s - definition: ') % word.title())
+        decorate_definition(word.title())
         return DATA[word.title()]
+
+    elif word.upper() in DATA:
+        decorate_definition(word.upper())
+        return DATA[word.upper()]
+
     else:
         close_matches = get_close_matches(word, DATA.keys(), 1, cutoff=0.8)
 
@@ -26,13 +32,17 @@ def translate(word):
             yn = input('\nDid you mean %s?\nEnter Y if yes, or N if no:  ' % close_match)
 
             if yn.lower() == 'y':
-                print('\n{:*^60}'.format(' %s - definition: ') % close_match)
+                decorate_definition(close_match)
                 return DATA[close_match]
             else:
                 return '\nPlease enter a word again.'
 
         else:
             return "Neither this or similar word is in dictionary.\n"
+
+
+def decorate_definition(word):
+    print('\n{:*^60}'.format(' %s - definition: ') % word)
 
 
 if __name__ == '__main__':
