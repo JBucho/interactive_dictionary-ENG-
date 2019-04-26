@@ -2,6 +2,7 @@
 
 import json
 from difflib import get_close_matches
+import sys
 
 
 DATA = json.load(open("data.json"))
@@ -9,7 +10,7 @@ DATA = json.load(open("data.json"))
 
 def translate(word):
     while not word:
-        word = input('\nNo word entered. Please enter a word to translate: ')
+        word = input("\nNo word entered. Please enter a word to translate: ")
 
     word = word.lower()
     if word in DATA.keys():
@@ -29,38 +30,59 @@ def translate(word):
 
         if close_matches:
             close_match = close_matches[0]
-            yn = input('\nDid you mean %s?\nEnter Y if yes, or N if no:  ' % close_match)
+            yn = input(
+                "\nDid you mean %s?\nEnter Y if yes, or N if no:  " % close_match
+            )
 
-            if yn.lower() == 'y':
+            if yn.lower() == "y":
                 decorate_definition(close_match)
                 return DATA[close_match]
             else:
-                return '\nPlease enter a word again.'
+                return translate(word=input('Please enter a word again'))
 
         else:
-            return "Neither this or similar word is in dictionary.\n"
+            return "Neither this or similar word/phrase is in dictionary.\n"
 
 
 def decorate_definition(word):
-    print('\n{:*^60}'.format(' %s - definition: ') % word)
+    print("\n{:*^60}".format(" %s - definition: ") % word)
 
 
-if __name__ == '__main__':
-    print()
-    print(' Welcome to simple English Dictionary! '.center(60, '*')
-          + '\n\nDictionary contains 49537 available words/phrases.'
+def handle_outcome(wtt):  # wtt - word to translate
+    outcome = translate(wtt)
+    if type(outcome) == list:
+        for i in range(len(outcome)):
+            yield str(i + 1) + ". " + outcome[i]
+    else:
+        yield outcome
+
+
+if __name__ == "__main__":
+
+    if len(sys.argv) > 1:
+        to_translate = " ".join(sys.argv[1::])
+        final_message = handle_outcome(to_translate)
+        for message in final_message:
+            print(message)
+
+    else:
+        print()
+        print(
+            " Welcome to simple English Dictionary! ".center(60, "*")
+            + "\n\nDictionary contains 49537 available words/phrases."
             '\nTo finish the program enter "exit".'
-            '\nEnter word/phrase to check if the definition is in Dict.')
+            "\nEnter word/phrase to check if the definition is in Dict."
+        )
 
-    while True:
-        user_input = input('\nEnter a command or a word to translate: ')
-        if user_input == 'exit':
-            break
+        while True:
+            user_input = input("\nEnter a command or a word to translate: ")
+            if user_input == "exit":
+                break
 
-        else:
-            outcome = translate(user_input)
-            if type(outcome) == list:
-                for i in range(len(outcome)):
-                    print(str(i + 1) + '. ' + outcome[i])
             else:
-                print(outcome)
+                final_message = handle_outcome(user_input)
+                for message in final_message:
+                    print(message)
+
+
+
