@@ -1,5 +1,5 @@
 # Interactive Dictionary ENG
-> This is simple, english interactive dictionary.
+> This is simple, interactive english dictionary.
 
 
 Dictionary contains 49537 words/phrases and when given a word/phrase it returns the definition to it.
