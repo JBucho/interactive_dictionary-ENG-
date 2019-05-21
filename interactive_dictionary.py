@@ -38,7 +38,7 @@ def translate(word):
                 decorate_definition(close_match)
                 return DATA[close_match]
             else:
-                translate(word=input('Please enter a word again'))
+                translate(word=input("Please enter a word again"))
 
         else:
             return "Neither this or similar word/phrase is in dictionary.\n"
